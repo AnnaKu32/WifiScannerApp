@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WIFI Scanner</string>
+    <string name="title_info">Network Information</string>
+    <string name="save">Save</string>
+</resources>
