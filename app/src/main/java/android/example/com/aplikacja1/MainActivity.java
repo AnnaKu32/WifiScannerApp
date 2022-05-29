@@ -5,23 +5,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.text.format.Formatter;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,7 +25,7 @@ import java.util.ArrayList;
 //-------------------------------------------------------------------------------//
 //deklaracja klasy MainActivity, która rozszerza AppCompatActivity
 //AppCompatActivity to podklasa Activity, która obsługuje funkcje Androida
-public class MainActivity<textRssi> extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
 
     private int WIFI_PERMISSION_CODE = 1;
 
@@ -40,6 +34,7 @@ public class MainActivity<textRssi> extends AppCompatActivity {
 
     DataBase mydb;
     ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency;
+    CustomAdapter customAdapter;
 
 
 
@@ -72,6 +67,9 @@ public class MainActivity<textRssi> extends AppCompatActivity {
         frequency = new ArrayList<>();
 
         informationInArrays();
+        customAdapter = new CustomAdapter(MainActivity.this, id, connection, ip, speed, rssi, mac, ssid, bssid, frequency);
+        recyclerView.setAdapter(customAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager((MainActivity.this)));
 
         Button buttonRequest = findViewById(R.id.button);
         buttonRequest.setOnClickListener(new View.OnClickListener() {
@@ -108,9 +106,7 @@ public class MainActivity<textRssi> extends AppCompatActivity {
             }
         }
     }
-
-
-
+    
     //funkcja do zdobycia przyzwolenia do ACCESS_WIFI_STATE
     private void requestWIFIPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
