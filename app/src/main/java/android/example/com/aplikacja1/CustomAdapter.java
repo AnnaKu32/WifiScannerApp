@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
 
     Context context;
-    ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency;
+    ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency, distance;
 
 
     CustomAdapter(Context context,
@@ -27,8 +27,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
                          ArrayList mac,
                          ArrayList ssid,
                          ArrayList bssid,
-                         ArrayList frequency) {
+                         ArrayList frequency,
+                         ArrayList distance) {
         this.context = context;
+        this.id = id;
         this.connection = connection;
         this.ip = ip;
         this.speed = speed;
@@ -37,6 +39,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         this.ssid = ssid;
         this.bssid = bssid;
         this.frequency = frequency;
+        this.distance = distance;
 
     }
 
@@ -50,15 +53,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CustomAdapter.MyViewHolder holder, int position) {
-        holder.textid.setText(String.valueOf(id.get(position)));
-        holder.textconnection.setText(String.valueOf(connection.get(position)));
-        holder.textip.setText(String.valueOf(ip.get(position)));
-        holder.textspeed.setText(String.valueOf(speed.get(position)));
-        holder.textrssi.setText(String.valueOf(rssi.get(position)));
-        holder.textmac.setText(String.valueOf(mac.get(position)));
-        holder.textssid.setText(String.valueOf(ssid.get(position)));
-        holder.textbssid.setText(String.valueOf(bssid.get(position)));
-        holder.textfrequency.setText(String.valueOf(frequency.get(position)));
+        holder.textid.setText("ID "+ String.valueOf(id.get(position)));
+        holder.textconnection.setText("Connection: " + String.valueOf(connection.get(position)));
+        holder.textip.setText("IP: " + String.valueOf(ip.get(position)));
+        holder.textspeed.setText("Speed: " +String.valueOf(speed.get(position)));
+        holder.textrssi.setText("RSSI: " + String.valueOf(rssi.get(position)));
+        holder.textmac.setText("MAC: " + String.valueOf(mac.get(position)));
+        holder.textssid.setText("SSID: " + String.valueOf(ssid.get(position)));
+        holder.textbssid.setText("BSSID: " + String.valueOf(bssid.get(position)));
+        holder.textfrequency.setText("Frequency: " + String.valueOf(frequency.get(position)));
+        holder.textdistance.setText("Distance: " + String.valueOf(distance.get(position)));
     }
 
     @Override
@@ -68,7 +72,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView textid, textconnection, textip, textspeed, textrssi, textmac, textssid, textbssid, textfrequency;
+        TextView textid, textconnection, textip, textspeed, textrssi, textmac, textssid, textbssid, textfrequency, textdistance;
         LinearLayout mainLayout;
 
         MyViewHolder(@NonNull View itemView) {
@@ -82,6 +86,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
             textssid = itemView.findViewById(R.id.textssid);
             textbssid = itemView.findViewById(R.id.textbssid);
             textfrequency= itemView.findViewById(R.id.textfrequency);
+            textdistance = itemView.findViewById(R.id.textdistance);
 
         }
     }

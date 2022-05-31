@@ -25,6 +25,7 @@ class DataBase extends SQLiteOpenHelper {
     private static final String COLUMN_SPEED = "speed";
     private static final String COLUMN_SSID = "ssid";
     private static final String COLUMN_BSSID = "bssid";
+    private static final String COLUMN_DISTANCE = "distance";
 
     public DataBase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,7 +43,8 @@ class DataBase extends SQLiteOpenHelper {
                         COLUMN_MACADDRESS + " TEXT, " +
                         COLUMN_SSID + " TEXT, " +
                         COLUMN_BSSID + " TEXT, " +
-                        COLUMN_FREQUENCY + " INTEGER);";
+                        COLUMN_FREQUENCY + " INTEGER, " +
+                        COLUMN_DISTANCE + " DOUBLE);";
         db.execSQL(query);
     }
 
@@ -52,7 +54,9 @@ class DataBase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void addInfo(String connection, String ip, int speed, int rssi, String mac, String ssid, String bssid, int frequency){
+    void addInfo(String connection, String ip, int speed, int rssi, String mac, String ssid,
+                 String bssid, int frequency, double distance){
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -64,6 +68,7 @@ class DataBase extends SQLiteOpenHelper {
         cv.put(COLUMN_SSID, ssid);
         cv.put(COLUMN_BSSID, bssid);
         cv.put(COLUMN_FREQUENCY, frequency);
+        cv.put(COLUMN_DISTANCE, distance);
         long result = db.insert(TABLE_NAME,null,cv);
         //nie udalo sie dodac danych do bazy
         if(result == -1){

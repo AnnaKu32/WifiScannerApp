@@ -3,18 +3,22 @@ package android.example.com.aplikacja1;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.NetworkInterface;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +35,7 @@ public class Wifi_Scanner_Information extends AppCompatActivity {
         wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
         WifiInfo wifiinfo = wifiManager.getConnectionInfo();
+        List<ScanResult> scan = wifiManager.getScanResults();
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkinfo = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
@@ -74,18 +79,22 @@ public class Wifi_Scanner_Information extends AppCompatActivity {
         String bssid = wifiinfo.getBSSID();
         textBSSID.setText("BSSID: "+ bssid);
 
+        TextView textdistance = (TextView)findViewById(R.id.distance);
+        double d = getDistance();
+        double distance = Math.round(d*100)/100;
+        textdistance.setText("Distance: "+ String.valueOf(distance)+ " m");
+
 
         Button save_button = findViewById(R.id.save_button);
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DataBase myDB = new DataBase(Wifi_Scanner_Information.this);
-                myDB.addInfo(connection, ip, speed, rssi, mac, ssid, bssid, frequency);
+                myDB.addInfo(connection, ip, speed, rssi, mac, ssid, bssid, frequency, distance);
 
             }
         });
     }
-
 
     private TextView textRSSI;
     private TextView textIP;
@@ -95,6 +104,7 @@ public class Wifi_Scanner_Information extends AppCompatActivity {
     private TextView textSSID;
     private TextView textBSSID;
     private TextView textconnection;
+    private TextView textdistance;
 
 
     public static String getMacAddr() {
@@ -122,5 +132,26 @@ public class Wifi_Scanner_Information extends AppCompatActivity {
             //handle exception
         }
         return "";
+    }
+
+    public double calculateDistance(double signalLevelInDb, double freqInMHz) {
+        double exp = (27.55 - (20 * Math.log10(freqInMHz)) + Math.abs(signalLevelInDb)) / 20.0;
+        return Math.pow(10.0, exp);
+    }
+
+    public double getDistance(){
+        WifiInfo wifiinfo = wifiManager.getConnectionInfo();
+        ArrayList<ScanResult> results = (ArrayList<ScanResult>)wifiManager.getScanResults();
+        if(results == null){
+            Log.d("results", "results jest nullem");
+        }
+        String bssid = wifiinfo.getBSSID();
+        for (ScanResult result : results){
+            Log.d("get distance", bssid + " " + result.BSSID);
+            if(result.BSSID.equals(bssid)){
+                return calculateDistance(result.level, result.frequency);
+            }
+        }
+        return -1;
     }
 }

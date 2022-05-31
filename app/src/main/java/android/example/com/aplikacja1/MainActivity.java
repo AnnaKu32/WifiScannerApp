@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -28,12 +29,13 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private int WIFI_PERMISSION_CODE = 1;
+    private int LOCATION_PERMISSION_CODE = 2;
 
     RecyclerView recyclerView;
     FloatingActionButton Button2;
 
     DataBase mydb;
-    ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency;
+    ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency, distance;
     CustomAdapter customAdapter;
 
 
@@ -65,9 +67,10 @@ public class MainActivity extends AppCompatActivity {
         ssid = new ArrayList<>();
         bssid = new ArrayList<>();
         frequency = new ArrayList<>();
+        distance =  new ArrayList<>();
 
         informationInArrays();
-        customAdapter = new CustomAdapter(MainActivity.this, id, connection, ip, speed, rssi, mac, ssid, bssid, frequency);
+        customAdapter = new CustomAdapter(MainActivity.this, id, connection, ip, speed, rssi, mac, ssid, bssid, frequency, distance);
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager((MainActivity.this)));
 
@@ -76,11 +79,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(MainActivity.this,
-                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                        Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(MainActivity.this, "You have already granted this permission!",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     requestWIFIPermission();
+                }
+                if (ContextCompat.checkSelfPermission(MainActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(MainActivity.this, "You have already granted this permission!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    requestLocationPermission();
                 }
             }
         });
@@ -102,11 +112,12 @@ public class MainActivity extends AppCompatActivity {
                 ssid.add(cursor.getString(6));
                 bssid.add(cursor.getString(7));
                 frequency.add(cursor.getString(8));
-
+                distance.add(cursor.getString(9));
+                Log.d("baza danych", "kolejny rekord:");
             }
         }
     }
-    
+
     //funkcja do zdobycia przyzwolenia do ACCESS_WIFI_STATE
     private void requestWIFIPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
@@ -133,10 +144,35 @@ public class MainActivity extends AppCompatActivity {
                     new String[]{Manifest.permission.ACCESS_WIFI_STATE}, WIFI_PERMISSION_CODE);
         }
     }
+    private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed for WIFI access")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MainActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+        }
+    }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == WIFI_PERMISSION_CODE) {
+        if (requestCode == WIFI_PERMISSION_CODE || requestCode == LOCATION_PERMISSION_CODE ) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
             } else {
