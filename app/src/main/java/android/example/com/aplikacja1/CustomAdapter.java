@@ -53,7 +53,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull CustomAdapter.MyViewHolder holder, int position) {
-        holder.textid.setText("ID "+ String.valueOf(id.get(position)));
+        holder.textid.setText(String.valueOf(id.get(position)));
         holder.textconnection.setText("Connection: " + String.valueOf(connection.get(position)));
         holder.textip.setText("IP: " + String.valueOf(ip.get(position)));
         holder.textspeed.setText("Speed: " +String.valueOf(speed.get(position)));

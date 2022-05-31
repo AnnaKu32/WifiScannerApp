@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         mydb = new DataBase(MainActivity.this);
         id = new ArrayList<>();
         connection = new ArrayList<>();
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(customAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager((MainActivity.this)));
 
-        Button buttonRequest = findViewById(R.id.button);
+        ImageButton buttonRequest = findViewById(R.id.button);
         buttonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
