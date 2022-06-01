@@ -16,8 +16,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     Context context;
     ArrayList<String> id, connection, ip, speed, rssi, mac, ssid, bssid, frequency, distance;
-
-
+    
     CustomAdapter(Context context,
                          ArrayList id,
                          ArrayList connection,

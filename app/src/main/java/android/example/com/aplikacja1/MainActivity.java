@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         mydb = new DataBase(MainActivity.this);
         id = new ArrayList<>();
         connection = new ArrayList<>();
