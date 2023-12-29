@@ -24,9 +24,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-//-------------------------------------------------------------------------------//
-//deklaracja klasy MainActivity, która rozszerza AppCompatActivity
-//AppCompatActivity to podklasa Activity, która obsługuje funkcje Androida
 public class MainActivity extends AppCompatActivity {
 
     private int WIFI_PERMISSION_CODE = 1;
@@ -45,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //określa, który layout jest przypisany do aktywności (np. ten do activity_main.xml)
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
@@ -119,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //funkcja do zdobycia przyzwolenia do ACCESS_WIFI_STATE
     private void requestWIFIPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_WIFI_STATE)) {
