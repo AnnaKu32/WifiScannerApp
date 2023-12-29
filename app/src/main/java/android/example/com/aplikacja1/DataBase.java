@@ -70,7 +70,6 @@ class DataBase extends SQLiteOpenHelper {
         cv.put(COLUMN_FREQUENCY, frequency);
         cv.put(COLUMN_DISTANCE, distance);
         long result = db.insert(TABLE_NAME,null,cv);
-        //nie udalo sie dodac danych do bazy
         if(result == -1){
             Toast.makeText(context, "Failed to Add Wifi Information To Database", Toast.LENGTH_SHORT).show();
         }
